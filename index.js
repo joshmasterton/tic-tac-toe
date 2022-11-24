@@ -26,7 +26,7 @@ const Gameboard = (() => {
         };
     };
 
-    const checkWinner = (y, a) => {
+    const checkWinner = (y) => {
         let x = y.marker;
 
         if(
@@ -41,8 +41,12 @@ const Gameboard = (() => {
         ){
             y.score += 1;
             const winningPlayer = document.getElementById(`${y.marker}`);
+            const getGrid = document.getElementsByClassName("grid");
             winningPlayer.innerHTML = `${y.name}: ${y.score}`;
-            a = true;
+            for(let i = 0; i < gameboard.length; i++){
+                getGrid[i].innerHTML = "";
+                gameboard[i] = "";
+            };
         };
     };
 
@@ -51,8 +55,6 @@ const Gameboard = (() => {
 
 const displayController = (() => {
     let activePlayer = null;
-
-    let roundOver = false
 
     const createGrid = () => {
         const gridCon = document.createElement("div");
@@ -67,8 +69,7 @@ const displayController = (() => {
                     activePlayer = Gameboard.getActivePlayer();
                     grid.innerHTML = activePlayer.marker;
                     Gameboard.gameboard[i] = activePlayer.marker;
-                    Gameboard.checkWinner(activePlayer, roundOver);
-                    console.log(roundOver);
+                    Gameboard.checkWinner(activePlayer);
                 };
             });
             gridCon.appendChild(grid);
