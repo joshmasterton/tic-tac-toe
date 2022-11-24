@@ -1,114 +1,126 @@
-// Gameboard module deals with all functionallity of the elements
-const Gameboard = (() => {
+const root = document.getElementById("root");
 
-    // Simple array to store changed values when player selects empty space
-    let gameBoard = [
-        "", "", "",
-        "", "", "",
-        "", "", "",
+const Gameboard = (() => {
+    let gameboard = [
+        "","","",
+        "","","",
+        "","","",
     ];
 
-    // A factory function meant to act as a template for making multiple players
-    const Player = (name, marker, turn, score) => {
-        return {name, marker, turn, score};
+    const Player = (name, marker, active, score) => {
+        return {name, marker, active, score};
     };
 
-    const playerOne = Player("Friend", "X", true, 0);
-    const playerTwo = Player("Enemy", "O", false, 0);
-    let winner = "";
+    const playerOne = Player("Zeno", "X", true, 0);
+    const playerTwo = Player("Xona", "O", false, 0);
 
-    // Function that decides who's turn it is based of if turn is true or not
-    const getCurrentPlayer = () => {
-        let currentPlayer = null;
-        if(playerOne.turn === true){
-            playerTwo.turn = true;
-            playerOne.turn = false;
-            return currentPlayer = playerOne;
-        }else if(playerTwo.turn === true){
-            playerOne.turn = true;
-            playerTwo.turn = false;
-            return currentPlayer = playerTwo;
+    const getActivePlayer = () => {
+        if(playerOne.active === true){
+            playerOne.active = false;
+            playerTwo.active = true;
+            return playerOne;
+        }else if(playerTwo.active === true){
+            playerOne.active = true;
+            playerTwo.active = false;
+            return playerTwo;
         };
     };
 
-    // When the current player selects an empty area this function checks if there are 3 
-    // places that match so that it can declare a winner if there is one  
-    const getWinner = (currentPlayer) => {
-        if(gameBoard[0] === currentPlayer && gameBoard[1] === currentPlayer && gameBoard[2] === currentPlayer ||
-            gameBoard[3] === currentPlayer && gameBoard[4] === currentPlayer && gameBoard[5] === currentPlayer || 
-            gameBoard[6] === currentPlayer && gameBoard[7] === currentPlayer && gameBoard[8] === currentPlayer ||
-            gameBoard[0] === currentPlayer && gameBoard[3] === currentPlayer && gameBoard[6] === currentPlayer ||
-            gameBoard[1] === currentPlayer && gameBoard[4] === currentPlayer && gameBoard[7] === currentPlayer ||
-            gameBoard[2] === currentPlayer && gameBoard[5] === currentPlayer && gameBoard[8] === currentPlayer ||
-            gameBoard[0] === currentPlayer && gameBoard[4] === currentPlayer && gameBoard[8] === currentPlayer ||
-            gameBoard[2] === currentPlayer && gameBoard[4] === currentPlayer && gameBoard[6] === currentPlayer)
-            {
-                if(winner === ""){
-                    const resultWinnerElement = displayController.createResults();
-                    resultWinnerElement.innerHTML = `${currentPlayer} Is The Winner Of This Round`;
-                    winner = currentPlayer;
-                };
-                console.log(winner);
-            };
+    const checkWinner = (y, a) => {
+        let x = y.marker;
+
+        if(
+            gameboard[0] === x && gameboard[1] === x && gameboard[2] === x ||
+            gameboard[3] === x && gameboard[4] === x && gameboard[5] === x ||
+            gameboard[6] === x && gameboard[7] === x && gameboard[8] === x ||
+            gameboard[0] === x && gameboard[3] === x && gameboard[6] === x ||
+            gameboard[1] === x && gameboard[4] === x && gameboard[7] === x ||
+            gameboard[2] === x && gameboard[5] === x && gameboard[8] === x ||
+            gameboard[0] === x && gameboard[4] === x && gameboard[8] === x ||
+            gameboard[2] === x && gameboard[4] === x && gameboard[6] === x
+        ){
+            y.score += 1;
+            const winningPlayer = document.getElementById(`${y.marker}`);
+            winningPlayer.innerHTML = `${y.name}: ${y.score}`;
+            a = true;
+        };
     };
-    return {
-        gameBoard,
-        playerOne, 
-        playerTwo, 
-        getCurrentPlayer,
-        getWinner,
-        winner
-    };
+
+    return {gameboard, playerOne, playerTwo, getActivePlayer, checkWinner};
 })();
 
-
-// Here is a module we use to create and edit DOM elements
 const displayController = (() => {
-    const root = document.getElementById("root");
-    let currentPlayer = null;
+    let activePlayer = null;
+
+    let roundOver = false
 
     const createGrid = () => {
         const gridCon = document.createElement("div");
         gridCon.id = "gridCon";
         root.appendChild(gridCon);
 
-        const gameBoardLength = Gameboard.gameBoard.length;
-        for(let i = 0; i < gameBoardLength; i++){
+        for(let i = 0; i < Gameboard.gameboard.length; i++){
             const grid = document.createElement("button");
             grid.className = "grid";
-            grid.value = i;
-            grid.addEventListener("click", () => { 
+            grid.addEventListener("click", () => {
                 if(grid.innerHTML === ""){
-                    currentPlayer = Gameboard.getCurrentPlayer();
-                    grid.innerHTML = currentPlayer.marker;
-                    Gameboard.gameBoard[i] = currentPlayer.marker;
-                    Gameboard.getWinner(currentPlayer.marker);
+                    activePlayer = Gameboard.getActivePlayer();
+                    grid.innerHTML = activePlayer.marker;
+                    Gameboard.gameboard[i] = activePlayer.marker;
+                    Gameboard.checkWinner(activePlayer, roundOver);
+                    console.log(roundOver);
                 };
             });
             gridCon.appendChild(grid);
         };
-
-        return gridCon;
     };
 
-    const createResults = () => {
-        const resultCon = document.createElement("div");
-        resultCon.id = "resultCon";
-        root.appendChild(resultCon);
-        const resultBtn = document.createElement("button");
-        resultBtn.className = "resultChild";
-        resultBtn.addEventListener("click", () => {
-            window.location.reload();
+    const createScoreboard = () => {
+        const scoreCon = document.createElement("div");
+        scoreCon.id = "scoreCon";
+        root.appendChild(scoreCon);
+
+        const playerOneScore = document.createElement("div");
+        playerOneScore.className = "score";
+        playerOneScore.id = "X";
+        playerOneScore.innerHTML = `${Gameboard.playerOne.name}: ${Gameboard.playerOne.score}`;
+        scoreCon.appendChild(playerOneScore);
+
+        const playerTwoScore = document.createElement("div");
+        playerTwoScore.className = "score";
+        playerTwoScore.id = "O";
+        playerTwoScore.innerHTML = `${Gameboard.playerTwo.name}: ${Gameboard.playerTwo.score}`;
+        scoreCon.appendChild(playerTwoScore);
+    };
+
+    const createRestart = () => {
+        const restartCon = document.createElement("div");
+        restartCon.id = "restartCon";
+        root.appendChild(restartCon);
+
+        const restartBtn = document.createElement("button");
+        restartBtn.className = "restart";
+        restartBtn.innerHTML = "Restart";
+        restartBtn.addEventListener("click", () => {
+            const gridCon = document.getElementById("gridCon");
+            gridCon.remove();
+            restartCon.remove();
+            createGrid();
+            createRestart();
+            for(let i = 0; i < Gameboard.gameboard.length; i++){
+                Gameboard.gameboard[i] = "";
+            }
         });
-        resultCon.appendChild(resultBtn);
+        restartCon.appendChild(restartBtn);
 
-        const resultWinner = document.createElement("div");
-        resultWinner.className = "resultChild";
-        resultCon.appendChild(resultWinner);
-
-        return resultWinner;
+        const winnerResult = document.createElement("div");
+        winnerResult.className = "restart";;
+        restartCon.appendChild(winnerResult);
     };
-    return {createGrid, createResults, currentPlayer};
-})(); 
 
+    return {createGrid, createScoreboard, createRestart};
+})();
+
+displayController.createScoreboard();
 displayController.createGrid();
+displayController.createRestart();

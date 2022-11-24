@@ -25,29 +25,42 @@ button:active{
 #root{
     display: flex;
     flex-direction: column;
-    flex: 1;
     margin: 2.5vmin;
     gap: 2.5vmin;
-}
-
-#resultCon{
-    display: flex;
     flex: 1;
 }
 
-    .resultChild{
+    #scoreCon{
         display: flex;
-        justify-content: center;
-        align-items: center;
         flex: 1;
+        gap: 2.5vmin;
     }
 
-#gridCon{
-    display: inline-grid;
-    flex: 5;
-    grid-template: repeat(3, 1fr)/repeat(3, 1fr);
-    gap: 2.5vmin;
-}
+        .score{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            background-color: darkred;
+        }
 
-.grid{
-}
+    #gridCon{
+        display: inline-grid;
+        grid-template: repeat(3, 1fr)/repeat(3, 1fr);
+        gap: 2.5vmin;
+        flex: 5;
+    }
+
+    #restartCon{
+        display: flex;
+        flex: 1;
+        gap: 2.5vmin;
+    }
+
+        .restart{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            background-color: darkred;
+        }
