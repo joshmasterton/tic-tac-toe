@@ -1,0 +1,53 @@
+html,body{
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    font-size: 3vmin;
+    color: white;
+    background-color: rgb(39, 39, 39);
+}
+
+button{
+    border-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 3vmin;
+    color: white;
+    background-color: darkred;
+}
+
+button:active{
+    background-color: darkorange;
+}
+
+#root{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin: 2.5vmin;
+    gap: 2.5vmin;
+}
+
+#resultCon{
+    display: flex;
+    flex: 1;
+}
+
+    .resultChild{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+    }
+
+#gridCon{
+    display: inline-grid;
+    flex: 5;
+    grid-template: repeat(3, 1fr)/repeat(3, 1fr);
+    gap: 2.5vmin;
+}
+
+.grid{
+}
