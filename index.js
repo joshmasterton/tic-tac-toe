@@ -1,11 +1,18 @@
 const root = document.getElementById("root");
 
+// Gameboard module contains all data and functions for interaction
+
 const Gameboard = (() => {
+
+    // Array containing grid data
+
     let gameboard = [
         "","","",
         "","","",
         "","","",
     ];
+
+    // Factory function for creating players
 
     const Player = (name, marker, active, score) => {
         return {name, marker, active, score};
@@ -13,6 +20,8 @@ const Gameboard = (() => {
 
     const playerOne = Player("Zeno", "X", true, 0);
     const playerTwo = Player("Xona", "O", false, 0);
+
+    // Find current player through checking if active is true of false
 
     const getActivePlayer = () => {
         if(playerOne.active === true){
@@ -26,9 +35,10 @@ const Gameboard = (() => {
         };
     };
 
+    // If necessary requirments are met begin winner process
+
     const checkWinner = (y) => {
         let x = y.marker;
-
         if(
             gameboard[0] === x && gameboard[1] === x && gameboard[2] === x ||
             gameboard[3] === x && gameboard[4] === x && gameboard[5] === x ||
@@ -40,9 +50,11 @@ const Gameboard = (() => {
             gameboard[2] === x && gameboard[4] === x && gameboard[6] === x
         ){
             y.score += 1;
-            const winningPlayer = document.getElementById(`${y.marker}`);
             const getGrid = document.getElementsByClassName("grid");
+            const getWinnerResult = document.getElementById("winnerResult");
+            const winningPlayer = document.getElementById(`${y.marker}`);
             winningPlayer.innerHTML = `${y.name}: ${y.score}`;
+            getWinnerResult.innerHTML = `${y.name} won the round`;
             for(let i = 0; i < gameboard.length; i++){
                 getGrid[i].innerHTML = "";
                 gameboard[i] = "";
@@ -52,6 +64,8 @@ const Gameboard = (() => {
 
     return {gameboard, playerOne, playerTwo, getActivePlayer, checkWinner};
 })();
+
+// All DOM elements are stored in the display controller
 
 const displayController = (() => {
     let activePlayer = null;
@@ -115,7 +129,8 @@ const displayController = (() => {
         restartCon.appendChild(restartBtn);
 
         const winnerResult = document.createElement("div");
-        winnerResult.className = "restart";;
+        winnerResult.id = "winnerResult";
+        winnerResult.className = "restart";
         restartCon.appendChild(winnerResult);
     };
 
