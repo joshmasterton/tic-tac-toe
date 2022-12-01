@@ -18,8 +18,8 @@ const Gameboard = (() => {
         return {name, marker, active, score};
     };
 
-    const playerOne = Player("Zeno", "X", true, 0);
-    const playerTwo = Player("Xona", "O", false, 0);
+    const playerOne = Player("Player One", "X", true, 0);
+    const playerTwo = Player("Enemy", "O", false, 0);
 
     // Find current player through checking if active is true of false
 
@@ -53,8 +53,8 @@ const Gameboard = (() => {
             const getGrid = document.getElementsByClassName("grid");
             const getWinnerResult = document.getElementById("winnerResult");
             const winningPlayer = document.getElementById(`${y.marker}`);
-            winningPlayer.innerHTML = `${y.name}: ${y.score}`;
-            getWinnerResult.innerHTML = `${y.name} won the round`;
+            winningPlayer.innerHTML = `${y.name} - ${y.score}`;
+            getWinnerResult.innerHTML = `${y.name} Won The Round`;
             for(let i = 0; i < gameboard.length; i++){
                 getGrid[i].innerHTML = "";
                 gameboard[i] = "";
@@ -98,13 +98,13 @@ const displayController = (() => {
         const playerOneScore = document.createElement("div");
         playerOneScore.className = "score";
         playerOneScore.id = "X";
-        playerOneScore.innerHTML = `${Gameboard.playerOne.name}: ${Gameboard.playerOne.score}`;
+        playerOneScore.innerHTML = `${Gameboard.playerOne.name} - ${Gameboard.playerOne.score}`;
         scoreCon.appendChild(playerOneScore);
 
         const playerTwoScore = document.createElement("div");
         playerTwoScore.className = "score";
         playerTwoScore.id = "O";
-        playerTwoScore.innerHTML = `${Gameboard.playerTwo.name}: ${Gameboard.playerTwo.score}`;
+        playerTwoScore.innerHTML = `${Gameboard.playerTwo.name} - ${Gameboard.playerTwo.score}`;
         scoreCon.appendChild(playerTwoScore);
     };
 
@@ -118,8 +118,13 @@ const displayController = (() => {
         restartBtn.innerHTML = "Restart";
         restartBtn.addEventListener("click", () => {
             const gridCon = document.getElementById("gridCon");
+            const scoreCon = document.getElementById("scoreCon");
+            scoreCon.remove();
             gridCon.remove();
             restartCon.remove();
+            Gameboard.playerOne.score = 0;
+            Gameboard.playerTwo.score = 0;
+            createScoreboard();
             createGrid();
             createRestart();
             for(let i = 0; i < Gameboard.gameboard.length; i++){
